@@ -19,11 +19,23 @@ app.get("/proxy", async (req, res) => {
             return res.status(400).send("Ogiltigt protokoll.");
         }
 
-        const response = await fetch(url);
+        console.log(`Proxy request: ${url.href}`);
+
+        const response = await fetch(url.href, {
+            redirect: "follow",
+            headers: {
+                "User-Agent":
+                    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/140 Safari/537.36",
+                "Accept":
+                    "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
+            }
+        });
+
+        console.log(`Upstream response: ${response.status}`);
 
         if (!response.ok) {
             return res.status(response.status).send(
-                `Servern svarade med ${response.status}`
+                `Målsidan svarade med HTTP ${response.status}`
             );
         }
 
@@ -31,17 +43,18 @@ app.get("/proxy", async (req, res) => {
 
         if (!contentType.includes("text/html")) {
             return res.status(415).send(
-                "Den här enkla proxyn hanterar bara HTML."
+                "Den här versionen hanterar bara HTML."
             );
         }
 
         const html = await response.text();
 
+        res.status(200);
         res.set("Content-Type", "text/html; charset=utf-8");
         res.send(html);
 
     } catch (error) {
-        console.error(error);
+        console.error("Proxy error:", error);
         res.status(500).send("Kunde inte hämta sidan.");
     }
 });
@@ -49,3 +62,4 @@ app.get("/proxy", async (req, res) => {
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
+
