@@ -1,4 +1,6 @@
 const express = require("express");
+const cheerio = require("cheerio");
+
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -47,11 +49,34 @@ app.get("/proxy", async (req, res) => {
             );
         }
 
-        const html = await response.text();
+const html = await response.text();
+const $ = cheerio.load(html);
 
-        res.status(200);
-        res.set("Content-Type", "text/html; charset=utf-8");
-        res.send(html);
+$("a[href]").each((_, element) => {
+    const href = $(element).attr("href");
+
+    try {
+        if (!href || href.startsWith("#") || href.startsWith("javascript:")) {
+            return;
+        }
+
+        const absoluteUrl = new URL(href, url.href);
+
+        if (["http:", "https:"].includes(absoluteUrl.protocol)) {
+            $(element).attr(
+                "href",
+                `/proxy?url=${encodeURIComponent(absoluteUrl.href)}`
+            );
+        }
+    } catch {
+        // Ignore malformed URLs
+    }
+});
+
+res.status(200);
+res.set("Content-Type", "text/html; charset=utf-8");
+res.send($.html());
+
 
     } catch (error) {
         console.error("Proxy error:", error);
