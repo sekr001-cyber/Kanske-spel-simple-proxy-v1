@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Simple Proxy</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #111;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            width: min(600px, 90%);
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 10px;
+        }
+
+        p {
+            color: #aaa;
+        }
+
+        form {
+            display: flex;
+            gap: 10px;
+            margin-top: 25px;
+        }
+
+        input {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        button {
+            padding: 14px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            background: white;
+            color: black;
+            font-weight: bold;
+        }
+
+        button:hover {
+            opacity: 0.85;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Simple Proxy</h1>
+
+    <p>Enter an HTTP/HTTPS URL to test the proxy.</p>
+
+    <form action="/proxy" method="GET">
+
+        <input
+            type="url"
+            name="url"
+            placeholder="https://example.com"
+            required
+        >
+
+        <button type="submit">
+            Go
+        </button>
+
+    </form>
+
+</div>
+
+</body>
+</html>
