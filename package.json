@@ -5,8 +5,10 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
-  },
+{
   "dependencies": {
-    "express": "^5.1.0"
+    "express": "^5.0.0",
+    "cheerio": "^1.1.2"
   }
 }
+
